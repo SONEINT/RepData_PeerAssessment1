@@ -5,9 +5,21 @@
 
 **1. Introduction**
 
-It is now possible to collect a large amount of data about personal movement using activity monitoring devices such as a [Fitbit](http://www.fitbit.com/fr), [Nike Fuelband](http://www.nike.com/us/en_us/c/nikeplus-fuelband), or [Jawbone Up](https://jawbone.com/up). These type of devices are part of the “quantified self” movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. But these data remain under-utilized both because the raw data are hard to obtain and there is a lack of statistical methods and software for processing and interpreting the data.
+It is now possible to collect a large amount of data about personal movement 
+using activity monitoring devices such as a [Fitbit](http://www.fitbit.com/fr), 
+[Nike Fuelband](http://www.nike.com/us/en_us/c/nikeplus-fuelband), or 
+[Jawbone Up](https://jawbone.com/up). These type of devices are part of the 
+“quantified self” movement – a group of enthusiasts who take measurements about 
+themselves regularly to improve their health, to find patterns in their behavior, 
+or because they are tech geeks. But these data remain under-utilized both because 
+the raw data are hard to obtain and there is a lack of statistical methods and 
+software for processing and interpreting the data.
 
-This assignment makes use of data from a personal activity monitoring device. This device collects data at 5 minute intervals through out the day. The data consists of two months of data from an anonymous individual collected during the months of October and November, 2012 and include the number of steps taken in 5 minute intervals each day.
+This assignment makes use of data from a personal activity monitoring device. 
+This device collects data at 5 minute intervals through out the day. 
+The data consists of two months of data from an anonymous individual collected 
+during the months of October and November, 2012 and include the number of steps 
+taken in 5 minute intervals each day.
 
 **2. Data**
 
@@ -25,12 +37,53 @@ format
 
 - **interval**: Identifier for the 5-minute interval in which measurement was taken
 
-The dataset is stored in a comma-separated-value (CSV) file and there are a total of 17,568 observations in this dataset.
+The dataset is stored in a comma-separated-value (CSV) file and there are a 
+total of 17,568 observations in this dataset.
 
 **3. Assignment**
 
+- The strategy was to fork the Pr rdpeng *RepData_PeerAssessment1* repository 
+from his GitHub account to our own GitHub account and to work from it.
+- Then, we should clone our *RepData_PeerAssessment1* GitHub repository on 
+our local machine and began to work on the subject.
+- I began to work on the R code on a R script file to test different coding 
+strategies to do the assignment.
+- I choose the **ggplot2** package which is one of my favorite for exploratory
+data analysis tasks. His version is 0.9.3.1.You can find the resource here: 
+[ggplot2](http://docs.ggplot2.org/current/)
+- After, I have modified the PA1_template.Rmd file and to insert the different 
+code chunks inside.
+- Then, I began to push the modified file towards my GitHub *RepData_PeerAssessment1* 
+repository.
+- At the end, I finish the assignment with introducing some ameliorations on 
+plots (colors, legend, etc...) and some text to explain the coding strategy 
+and to answer to the different questions from the assignment. 
+
+My session info is here:
+
+R version 3.1.0 (2014-04-10)
+Platform: x86_64-apple-darwin10.8.0 (64-bit)
+
+locale:
+[1] fr_FR.UTF-8/fr_FR.UTF-8/fr_FR.UTF-8/C/fr_FR.UTF-8/fr_FR.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] ggplot2_1.0.0
+
+loaded via a namespace (and not attached):
+ [1] colorspace_1.2-4 digest_0.6.4     grid_3.1.0       gtable_0.1.2     labeling_0.3     MASS_7.3-34     
+ [7] munsell_0.4.2    plyr_1.8.1       proto_0.3-10     Rcpp_0.11.2      reshape2_1.4     scales_0.2.4    
+[13] stringr_0.6.2    tools_3.1.0     
 
 **3.1 Loading and preprocessing the data**
+
+As far as I have fork and clone the *RepData_PeerAssessment1* repository, 
+the activity.zip file is now located on my machine. 
+The idea is to create a simple function to unzip and read the .CSV file.
+
 
 
 ```r
@@ -57,6 +110,8 @@ activity_data <- read_data()
 
 
 **3.2 What is mean total number of steps taken per day?**
+
+Is is important to look at the structure and the quality of the dataset (tidy data).
 
 
 ```r
@@ -114,6 +169,8 @@ str(activity_data) # str function is important (ref to R programming course)
 ##  $ interval: Factor w/ 288 levels "0","5","10","15",..: 1 2 3 4 5 6 7 8 9 10 ...
 ```
 
+We need to create a function to compute the total number of steps per day.
+
 
 ```r
 # Create a function to compute the total number of steps taken per day
@@ -122,7 +179,14 @@ sum_steps_day <- aggregate(steps ~ date, data, sum)
 colnames(sum_steps_day) <- c("date", "steps")
 sum_steps_day
 }
+```
 
+We now need to create the requested plot. I will use the **ggplot2** package &
+the **geom_histogram** function. I like the aesthetics possibilities offered by
+the ggplot2 package. 
+
+
+```r
 library(ggplot2) # we shall use ggplot2 for plotting figures
 
 # Create a function to plot an histogram of the total number of steps per day
@@ -179,7 +243,7 @@ median = round(median(steps$steps), 2)
 plot_steps(steps, mean, median)
 ```
 
-![plot of chunk steps_data](figure/steps_data.png) 
+![plot of chunk plot_steps_data](figure/plot_steps_data.png) 
 
 **The total number of steps taken per day:**  
 - *Mean: 10766.19*
@@ -187,6 +251,8 @@ plot_steps(steps, mean, median)
 
 
 **3.3 What is the average daily activity pattern?**
+
+We need to create a function to compute the steps per interval.
 
 
 ```r
@@ -205,7 +271,12 @@ steps_interval <- function(data) {
   colnames(steps_splitted_by_interval) <- c("interval", "steps")
   steps_splitted_by_interval
 }
+```
 
+We now need to create the requested plot. Keep the **ggplot2** package.
+
+
+```r
 # Create a function to make the plot 
 plot_steps_interval_pattern <- function(steps_per_interval, Max_Steps_Per_Interval) {
   col_names=c(paste("5-min interval with maximum steps: ", Max_Steps_Per_Interval))
@@ -250,7 +321,7 @@ Max_Steps_Per_Interval <- steps_per_interval[which.max(steps_per_interval$steps)
 plot_steps_interval_pattern(steps_per_interval, Max_Steps_Per_Interval)
 ```
 
-![plot of chunk steps_interval_pattern_data](figure/steps_interval_pattern_data.png) 
+![plot of chunk plot_steps_interval_pattern_data](figure/plot_steps_interval_pattern_data.png) 
 
 
 The **835<sup>th</sup> interval** is the maximum activity interval on the average.
@@ -266,6 +337,11 @@ Missing_Values  <- dim(activity_data[is.na(activity_data$steps),])[1]
 
 - There are **15264 rows** with missing values in the activity dataset.
 - There are **2304** missing values in the activity dataset.
+
+NOTA: the missing values could be verified in str(activity_data) results above.
+
+We now need to create a function to fill the NA values with interval's steps means.
+We will use the same function **plot_steps** created above to make the plot.
 
 
 ```r
@@ -346,6 +422,10 @@ number of steps per day**  is 10766.19.
 
 **3.5 Are there differences in activity patterns between weekdays and weekends?**
 
+We will now create a function compute the days of the week separating the weekdays
+and the weekend days. Note that the days are in french language in the code due to
+my FRENCH system environment settings on R.
+
 
 ```r
 # Create a function to compute the days of the week data
@@ -369,7 +449,13 @@ Day_Of_The_Week_data_computing <- function(data) {
   Day_Of_The_Week_data$weekday_or_weekend <- as.factor(Day_Of_The_Week_data$weekday_or_weekend)
   Day_Of_The_Week_data
 }
+```
 
+We will now make the requested plot. We will use the **facet_wrap** function of
+**ggplot2** package to do the job.
+
+
+```r
 # Create the plot requested
 plot_day_of_the_week <- function(data) {
   ggplot(data, 
@@ -396,7 +482,7 @@ Day_Of_The_Week_data <- Day_Of_The_Week_data_computing(finalDataset)
 plot_day_of_the_week(Day_Of_The_Week_data)
 ```
 
-![plot of chunk day_of_the_week_data](figure/day_of_the_week_data.png) 
+![plot of chunk plot_day_of_the_week_data](figure/plot_day_of_the_week_data.png) 
 
 **the key differences in activity patterns between weekdays and weekends are:**
 
