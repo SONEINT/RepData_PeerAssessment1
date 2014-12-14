@@ -1,3 +1,11 @@
+DATA SCIENCE SPECIALIZATION COURSE - REPRODUCIBLE RESEARCH - PROGRAMMING ASSESSMENT 1
+======================================================================================
+*SONEINT @Soc_Net_Intel*
+
+Coursera - Reproducible Research
+
+![Exploratory Data Analysis](https://github.com/SONEINT/RepData_PeerAssessment1/blob/master/picture/Reprocible%20Research.jpg)
+
 ## Introduction
 
 It is now possible to collect a large amount of data about personal
