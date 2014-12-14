@@ -32,8 +32,8 @@ The dataset is stored in a comma-separated-value (CSV) file and there are a tota
 
 **3.1 Loading and preprocessing the data**
 
-```{r read_data, echo=TRUE}
 
+```r
 # Set the working directory on my local machine
 setwd("~/Desktop/Repo/RepData_PeerAssessment1")
 
@@ -58,15 +58,64 @@ activity_data <- read_data()
 
 **3.2 What is mean total number of steps taken per day?**
 
-```{r check_data, echo=TRUE}
+
+```r
 # Check the data
 summary(activity_data) # a good overview
+```
+
+```
+##      steps            date               interval    
+##  Min.   :  0.0   Min.   :2012-10-01   0      :   61  
+##  1st Qu.:  0.0   1st Qu.:2012-10-16   5      :   61  
+##  Median :  0.0   Median :2012-10-31   10     :   61  
+##  Mean   : 37.4   Mean   :2012-10-31   15     :   61  
+##  3rd Qu.: 12.0   3rd Qu.:2012-11-15   20     :   61  
+##  Max.   :806.0   Max.   :2012-11-30   25     :   61  
+##  NA's   :2304                         (Other):17202
+```
+
+```r
 head(activity_data) # begining of the data
+```
+
+```
+##   steps       date interval
+## 1    NA 2012-10-01        0
+## 2    NA 2012-10-01        5
+## 3    NA 2012-10-01       10
+## 4    NA 2012-10-01       15
+## 5    NA 2012-10-01       20
+## 6    NA 2012-10-01       25
+```
+
+```r
 tail(activity_data) # end of the data
+```
+
+```
+##       steps       date interval
+## 17563    NA 2012-11-30     2330
+## 17564    NA 2012-11-30     2335
+## 17565    NA 2012-11-30     2340
+## 17566    NA 2012-11-30     2345
+## 17567    NA 2012-11-30     2350
+## 17568    NA 2012-11-30     2355
+```
+
+```r
 str(activity_data) # str function is important (ref to R programming course)
 ```
 
-```{r steps_data, echo=TRUE}
+```
+## 'data.frame':	17568 obs. of  3 variables:
+##  $ steps   : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ date    : Date, format: "2012-10-01" "2012-10-01" ...
+##  $ interval: Factor w/ 288 levels "0","5","10","15",..: 1 2 3 4 5 6 7 8 9 10 ...
+```
+
+
+```r
 # Create a function to compute the total number of steps taken per day
 total_steps_per_day <- function(data) {
 sum_steps_day <- aggregate(steps ~ date, data, sum)
@@ -114,9 +163,7 @@ plot_steps <- function(steps, mean, median) {
           axis.text.x = element_text(colour = "red"),
           axis.text.y = element_text(colour = "blue"),
           panel.background = element_rect(fill = "wheat"),
-          legend.position = c(.75, .75),
-          legend.direction = "horizontal",
-          legend.background = element_rect(colour = "black"))
+          legend.position = "bottom")
 }
 
 # Compute the total number of steps per day
@@ -130,14 +177,17 @@ median = round(median(steps$steps), 2)
 plot_steps(steps, mean, median)
 ```
 
+![plot of chunk steps_data](figure/steps_data.png) 
+
 **The total number of steps taken per day:**  
-- *`r paste("Mean:", mean)`*
-- *`r paste("Median:", median)`*
+- *Mean: 10766.19*
+- *Median: 10765*
 
 
 **3.3 What is the average daily activity pattern?**
 
-```{r steps_interval_pattern_data, echo=TRUE}
+
+```r
 # Create a function to split & compute the steps per interval
 steps_interval <- function(data) {
   steps_splitted_by_interval <- aggregate(
@@ -183,9 +233,7 @@ plot_steps_interval_pattern <- function(steps_per_interval, Max_Steps_Per_Interv
           axis.text.x = element_text(colour = "red"),
           axis.text.y = element_text(colour = "blue"),
           panel.background = element_rect(fill = "wheat"),
-          legend.position = c(.75, .75),
-          legend.direction = "horizontal",
-          legend.background = element_rect(colour = "black"))
+          legend.position = "bottom")
 }
 
 # Compute the number of steps per interval
@@ -198,21 +246,25 @@ Max_Steps_Per_Interval <- steps_per_interval[which.max(steps_per_interval$steps)
 plot_steps_interval_pattern(steps_per_interval, Max_Steps_Per_Interval)
 ```
 
+![plot of chunk steps_interval_pattern_data](figure/steps_interval_pattern_data.png) 
 
-The **`r Max_Steps_Per_Interval`<sup>th</sup> interval** is the maximum activity interval on the average.
+
+The **835<sup>th</sup> interval** is the maximum activity interval on the average.
 
 **3.4 Imputing missing values**
 
-```{r NA_data, echo=TRUE}
+
+```r
 # Compute number of NA
 NumberNAs <- nrow(activity_data)-nrow(activity_data[!complete.cases(activity_data),])
 Missing_Values  <- dim(activity_data[is.na(activity_data$steps),])[1]
 ```
 
-- There are **`r NumberNAs` rows** with missing values in the activity dataset.
-- There are **`r Missing_Values`** missing values in the activity dataset.
+- There are **15264 rows** with missing values in the activity dataset.
+- There are **2304** missing values in the activity dataset.
 
-```{r Plot_NA_data, echo=TRUE}
+
+```r
 # Create a function to fill NA values with interval's steps means 
 impute_means <- function(data, defaults) {
   na_indices <- which(is.na(data$steps))
@@ -236,8 +288,31 @@ finalDataset <- data.frame(
   interval = activity_data$interval)
 
 summary(finalDataset)
-str(finalDataset)
+```
 
+```
+##      steps            date               interval    
+##  Min.   :  0.0   Min.   :2012-10-01   0      :   61  
+##  1st Qu.:  0.0   1st Qu.:2012-10-16   5      :   61  
+##  Median :  0.0   Median :2012-10-31   10     :   61  
+##  Mean   : 37.4   Mean   :2012-10-31   15     :   61  
+##  3rd Qu.: 27.0   3rd Qu.:2012-11-15   20     :   61  
+##  Max.   :806.0   Max.   :2012-11-30   25     :   61  
+##                                       (Other):17202
+```
+
+```r
+str(finalDataset)
+```
+
+```
+## 'data.frame':	17568 obs. of  3 variables:
+##  $ steps   : num  1.717 0.3396 0.1321 0.1509 0.0755 ...
+##  $ date    : Date, format: "2012-10-01" "2012-10-01" ...
+##  $ interval: Factor w/ 288 levels "0","5","10","15",..: 1 2 3 4 5 6 7 8 9 10 ...
+```
+
+```r
 # Compute the complete data
 Total_steps <- total_steps_per_day(finalDataset)
 Total_mean = round(mean(Total_steps$steps), 2)
@@ -247,16 +322,18 @@ Total_median = round(median(Total_steps$steps), 2)
 plot_steps(Total_steps, Total_mean, Total_median)
 ```
 
-The **mean total number of steps per day** is `r paste(Total_mean)` and the **median total 
-number of steps per day**  is `r paste(Total_median)`.
+![plot of chunk Plot_NA_data](figure/Plot_NA_data.png) 
+
+The **mean total number of steps per day** is 10766.19 and the **median total 
+number of steps per day**  is 10766.19.
 
 
 **Do these values differ from the estimates from the first part of the assignment?**
 
-- These values differ from the estimates from the first part of the assignment.The **mean of the first part** of the assignment `r paste(mean)` as well as the **mean of the second part** `r paste(Total_mean)` are **identical**.
-- Nevertheless, the **median of the fist part** `r paste(median)` is **different** from the **median of the second part** `r paste(Total_median)`.
-- In this second part of the assignment, the mean `r paste(Total_mean)` and the median 
-`r paste(Total_median)` have same values.
+- These values differ from the estimates from the first part of the assignment.The **mean of the first part** of the assignment 10766.19 as well as the **mean of the second part** 10766.19 are **identical**.
+- Nevertheless, the **median of the fist part** 10765 is **different** from the **median of the second part** 10766.19.
+- In this second part of the assignment, the mean 10766.19 and the median 
+10766.19 have same values.
 
 **What is the impact of imputing missing data on the estimates of the total daily number of steps?**
 
@@ -265,7 +342,8 @@ number of steps per day**  is `r paste(Total_median)`.
 
 **3.5 Are there differences in activity patterns between weekdays and weekends?**
 
-```{r day_of_the_week_data, echo=TRUE}
+
+```r
 # Create a function to compute the days of the week data
 Day_Of_The_Week_data_computing <- function(data) {
   # Create the new factor variable for "weekday" and "weekend"
@@ -302,9 +380,7 @@ plot_day_of_the_week <- function(data) {
           axis.text.x = element_text(colour = "red"),
           axis.text.y = element_text(colour = "blue"),
           panel.background = element_rect(fill = "wheat"),
-          legend.position = c(.75, .75),
-          legend.direction = "horizontal",
-          legend.background = element_rect(colour = "black"))
+          legend.position = "bottom")
 }
 
 # Compute the data
@@ -314,8 +390,10 @@ Day_Of_The_Week_data <- Day_Of_The_Week_data_computing(finalDataset)
 plot_day_of_the_week(Day_Of_The_Week_data)
 ```
 
+![plot of chunk day_of_the_week_data](figure/day_of_the_week_data.png) 
+
 **the key differences in activity patterns between weekdays and weekends are:**
 
 - We can observe that during the day the activity is spreaded in a different way between the days of the week and the days of the week-end ;
-- We can observe that the activity began sooner on the days of the week, with a high level of activity around the **`r Max_Steps_Per_Interval`<sup>th</sup> interval** interval, and a middle level of activity during the whole day ;
-- On the opposite, we can observe that the activity began later on the days of the week-end, with a lowest high level of activity around the **`r Max_Steps_Per_Interval`<sup>th</sup> interval** interval, but with a hihest level of activity during the rest of the day.
+- We can observe that the activity began sooner on the days of the week, with a high level of activity around the **835<sup>th</sup> interval** interval, and a middle level of activity during the whole day ;
+- On the opposite, we can observe that the activity began later on the days of the week-end, with a lowest high level of activity around the **835<sup>th</sup> interval** interval, but with a hihest level of activity during the rest of the day.

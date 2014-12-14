@@ -235,7 +235,9 @@ plot_steps_interval_pattern <- function(steps_per_interval, Max_Steps_Per_Interv
           axis.text.x = element_text(colour = "red"),
           axis.text.y = element_text(colour = "blue"),
           panel.background = element_rect(fill = "wheat"),
-          legend.position = "bottom")
+          legend.position = c(.75, .75),
+          legend.direction = "horizontal",
+          legend.background = element_rect(colour = "black"))
 }
 
 # Compute the number of steps per interval
@@ -382,7 +384,9 @@ plot_day_of_the_week <- function(data) {
           axis.text.x = element_text(colour = "red"),
           axis.text.y = element_text(colour = "blue"),
           panel.background = element_rect(fill = "wheat"),
-          legend.position = "bottom")
+          legend.position = c(.75, .75),
+          legend.direction = "horizontal",
+          legend.background = element_rect(colour = "black"))
 }
 
 # Compute the data
