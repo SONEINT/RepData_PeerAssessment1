@@ -114,7 +114,9 @@ plot_steps <- function(steps, mean, median) {
           axis.text.x = element_text(colour = "red"),
           axis.text.y = element_text(colour = "blue"),
           panel.background = element_rect(fill = "wheat"),
-          legend.position = "bottom")
+          legend.position = c(.75, .75),
+          legend.direction = "horizontal",
+          legend.background = element_rect(colour = "black"))
 }
 
 # Compute the total number of steps per day
